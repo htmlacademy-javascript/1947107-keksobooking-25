@@ -1,4 +1,3 @@
-// Источник: https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 const getRandomInt = function (min, max) {
   if (min < 0 || min >= max) {
     return;
@@ -9,7 +8,6 @@ const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-getRandomInt(0, 10);
 
 const getRandomFloat = function (min, max, numSigns = 5) {
   if (min < 0 || min >= max) {
@@ -19,15 +17,6 @@ const getRandomFloat = function (min, max, numSigns = 5) {
   return (Math.random() * (max - min) + min).toFixed(numSigns);
 };
 
-getRandomFloat(2.5, 5);
-
-const TITLES = [
-  'palace',
-  'flat',
-  'house',
-  'bungalow',
-  'hotel'
-];
 const TYPES = [
   'palace',
   'flat',
@@ -63,19 +52,47 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
-const AD_CURRENT = 2;
+const NUM_OF_ADS = 10;
 
 const getLocation = () => {
   const lat = getRandomFloat(35.65000, 35.70000);
   const lng = getRandomFloat(139.70000, 139.80000);
+
   return [lat, lng];
+};
+
+const userId = Array.from({ length: NUM_OF_ADS }, (v, k) => ++k);
+
+const getUserId = () => {
+  const lengthArr = userId.length - 1;
+  const randomNum = lengthArr > 1 ? getRandomInt(0, lengthArr) : 0;
+  const currentId = userId[randomNum];
+  userId.splice(randomNum, 1);
+
+  return currentId !== 10 ? `0${currentId}` : currentId;
+};
+
+const gerRandomPropsFromArray = (arrayOfValues) => {
+  const finishedArr = [];
+  const arr = [ ...arrayOfValues ];
+  const randomLengthArr = getRandomInt(1, arr.length);
+
+  for (let i = 0; i < randomLengthArr; i++) {
+    const arrLength = arr.length - 1;
+    const randomIndex = arrLength > 1 ? getRandomInt(1, arrLength) : 0;
+    const currentProp = arr[randomIndex];
+    finishedArr.push(currentProp);
+    arr.splice(randomIndex, 1);
+  }
+
+  return finishedArr;
 };
 
 const getOfferInfo = () => {
   const info = {};
   info.rooms = getRandomInt(1, 4);
   info.guests = getRandomInt(1, 6);
-  info.features = [ 'wifi', 'dishwasher' ];
+  info.features = gerRandomPropsFromArray(FEATURES);
   info.title = `${info.rooms}-я квартира`;
   info.description = `Сдается уютная ${info.rooms}-я квартира. Вмещаемое кол-во человек: ${info.guests}, из удобств в квартире есть: ${info.features.join(', ')}`;
   return info;
@@ -85,21 +102,13 @@ const getRandomPropFromArray = (arr) => getRandomInt(0, arr.length - 1);
 
 const createAd = () => {
 
-  // const getAvatar = () => {
-  //   let num = getRandomInt(1, 10);
-  //   if (num !== 10) {
-  //     num = `0${num}`;
-  //   }
-  //   return num;
-  // };
-
   const [ lat, lng ] = getLocation();
-  const { rooms, title, guests, description } = getOfferInfo();
+  const { rooms, title, guests, description, features } = getOfferInfo();
 
   return {
-    // author: {
-    //   avatar: `img/avatars/user${getAvatar()}.png`
-    // },
+    author: {
+      avatar: `img/avatars/user${getUserId()}.png`
+    },
     offer: {
       title: title,
       address: `${lat}, ${lng}`,
@@ -109,12 +118,9 @@ const createAd = () => {
       guests: guests,
       checkin: getRandomPropFromArray(CHECKIN_TIMES),
       checkout: getRandomPropFromArray(CHECKOUT_TIMES),
-      // features: [ 'wifi', 'dishwasher' ],
+      features: features,
       description: description,
-      // photos: [
-      //   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
-      //   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg'
-      // ],
+      photos: gerRandomPropsFromArray(PHOTOS),
     },
     location: {
       lat: lat,
@@ -123,6 +129,4 @@ const createAd = () => {
   };
 };
 
-const test = Array.from({ length: 2 }, createAd);
-
-console.log(test);
+const similarAds = Array.from({ length: NUM_OF_ADS }, createAd);
