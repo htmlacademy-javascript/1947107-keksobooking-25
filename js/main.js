@@ -1,6 +1,6 @@
 const getRandomInt = function (min, max) {
   if (min < 0 || min >= max) {
-    return;
+    throw new Error('Минимальное значение меньше 0, либо больше максимального');
   }
 
   min = Math.ceil(min);
@@ -8,10 +8,9 @@ const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-
 const getRandomFloat = function (min, max, numSigns = 5) {
   if (min < 0 || min >= max) {
-    return;
+    throw new Error('Минимальное значение меньше 0, либо больше максимального');
   }
 
   return (Math.random() * (max - min) + min).toFixed(numSigns);
@@ -54,25 +53,7 @@ const PHOTOS = [
 
 const NUM_OF_ADS = 10;
 
-const getLocation = () => {
-  const lat = getRandomFloat(35.65000, 35.70000);
-  const lng = getRandomFloat(139.70000, 139.80000);
-
-  return [lat, lng];
-};
-
-const userId = Array.from({ length: NUM_OF_ADS }, (v, k) => ++k);
-
-const getUserId = () => {
-  const lengthArr = userId.length - 1;
-  const randomNum = lengthArr > 1 ? getRandomInt(0, lengthArr) : 0;
-  const currentId = userId[randomNum];
-  userId.splice(randomNum, 1);
-
-  return currentId !== 10 ? `0${currentId}` : currentId;
-};
-
-const gerRandomPropsFromArray = (arrayOfValues) => {
+const getRandomPropsFromArray = (arrayOfValues) => {
   const finishedArr = [];
   const arr = [ ...arrayOfValues ];
   const randomLengthArr = getRandomInt(1, arr.length);
@@ -88,45 +69,44 @@ const gerRandomPropsFromArray = (arrayOfValues) => {
   return finishedArr;
 };
 
-const getOfferInfo = () => {
-  const info = {};
-  info.rooms = getRandomInt(1, 4);
-  info.guests = getRandomInt(1, 6);
-  info.features = gerRandomPropsFromArray(FEATURES);
-  info.title = `${info.rooms}-я квартира`;
-  info.description = `Сдается уютная ${info.rooms}-я квартира. Вмещаемое кол-во человек: ${info.guests}, из удобств в квартире есть: ${info.features.join(', ')}`;
-  return info;
-};
-
 const getRandomPropFromArray = (arr) => getRandomInt(0, arr.length - 1);
 
-const createAd = () => {
-
-  const [ lat, lng ] = getLocation();
-  const { rooms, title, guests, description, features } = getOfferInfo();
+const createAd = (id) => {
+  const rooms = getRandomInt(1, 4);
+  const guests = getRandomInt(1, 6);
+  const features = FEATURES.slice(0, getRandomInt(0, FEATURES.length - 1));
+  const title = `${rooms}-я квартира`;
+  const description = `Сдается уютная ${rooms}-я квартира. Вмещаемое кол-во человек: ${guests}, из удобств в квартире есть: ${features.join(', ')}`;
+  const price = getRandomInt(100, 1000);
+  const type = getRandomPropFromArray(TYPES);
+  const checkin = getRandomPropFromArray(CHECKIN_TIMES);
+  const checkout = getRandomPropFromArray(CHECKOUT_TIMES);
+  const photos = getRandomPropsFromArray(PHOTOS);
+  const location = {
+    lat: getRandomFloat(35.65000, 35.70000),
+    lng: getRandomFloat(139.70000, 139.80000)
+  };
 
   return {
     author: {
-      avatar: `img/avatars/user${getUserId()}.png`
+      avatar: `img/avatars/user${id >= 10 ? id : id.toString().padStart(2, '0')}.png`
     },
     offer: {
-      title: title,
-      address: `${lat}, ${lng}`,
-      price: getRandomInt(100, 1000),
-      type: getRandomPropFromArray(TYPES),
-      rooms: rooms,
-      guests: guests,
-      checkin: getRandomPropFromArray(CHECKIN_TIMES),
-      checkout: getRandomPropFromArray(CHECKOUT_TIMES),
-      features: features,
-      description: description,
-      photos: gerRandomPropsFromArray(PHOTOS),
+      title,
+      address: `${location.lat}, ${location.lng}`,
+      price,
+      type,
+      rooms,
+      guests,
+      checkin,
+      checkout,
+      features,
+      description,
+      photos,
     },
-    location: {
-      lat: lat,
-      lng: lng
-    }
+    location
   };
 };
-
-const similarAds = Array.from({ length: NUM_OF_ADS }, createAd);
+/* eslint-disable no-unused-vars */
+const similarAds = Array.from({ length: NUM_OF_ADS }, (v, k) => createAd(++k));
+/* eslint-enable no-unused-vars */
