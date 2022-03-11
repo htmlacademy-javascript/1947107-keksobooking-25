@@ -1,4 +1,9 @@
-import { getRandomInt, getRandomFloat } from './util.js';
+import {
+  getRandomInt,
+  getRandomFloat,
+  getRandomPropsFromArray,
+  getRandomPropFromArray
+} from './util.js';
 
 const TYPES = [
   'palace',
@@ -36,24 +41,6 @@ const PHOTOS = [
 ];
 
 const NUM_OF_ADS = 10;
-
-const getRandomPropsFromArray = (arrayOfValues) => {
-  const finishedArr = [];
-  const arr = [ ...arrayOfValues ];
-  const randomLengthArr = getRandomInt(1, arr.length);
-
-  for (let i = 0; i < randomLengthArr; i++) {
-    const arrLength = arr.length - 1;
-    const randomIndex = arrLength > 1 ? getRandomInt(1, arrLength) : 0;
-    const currentProp = arr[randomIndex];
-    finishedArr.push(currentProp);
-    arr.splice(randomIndex, 1);
-  }
-
-  return finishedArr;
-};
-
-const getRandomPropFromArray = (arr) => getRandomInt(0, arr.length - 1);
 
 const createAd = (id) => {
   const rooms = getRandomInt(1, 4);
