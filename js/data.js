@@ -40,7 +40,7 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
-const NUM_OF_ADS = 10;
+const NUM_OF_ADS = 1;
 
 const createAd = (id) => {
   const rooms = getRandomInt(1, 4);
