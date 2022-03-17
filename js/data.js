@@ -40,8 +40,6 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg'
 ];
 
-const NUM_OF_ADS = 1;
-
 const createAd = (id) => {
   const rooms = getRandomInt(1, 4);
   const guests = getRandomInt(1, 6);
@@ -79,6 +77,6 @@ const createAd = (id) => {
   };
 };
 
-const similarAds = () => Array.from({ length: NUM_OF_ADS }, (v, k) => createAd(++k));
+const similarAds = (amount) => Array.from({ length: amount }, (v, k) => createAd(++k));
 
 export { similarAds };
