@@ -47,7 +47,7 @@ const createCardsList = (amount) => {
   for (let i = 0; i < amount; i++) {
     const card = createCard(data[i]);
     cardsListFragment.append(card);
-  };
+  }
   return cardsListFragment;
 };
 
