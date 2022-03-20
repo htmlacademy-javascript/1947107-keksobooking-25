@@ -33,7 +33,7 @@ const getRandomPropsFromArray = (arrayOfValues) => {
   return finishedArr;
 };
 
-const getRandomPropFromArray = (arr) => getRandomInt(0, arr.length - 1);
+const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];
 
 export {
   getRandomInt,

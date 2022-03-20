@@ -1,3 +1,3 @@
-import { similarAds } from './data.js';
+import { renderCards } from './generate-cards.js';
 
-similarAds();
+renderCards(3);
