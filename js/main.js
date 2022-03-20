@@ -1,3 +1,5 @@
 import { renderCards } from './generate-cards.js';
+import { submitForm } from './form.js';
 
-renderCards(3);
+renderCards(1);
+submitForm();
