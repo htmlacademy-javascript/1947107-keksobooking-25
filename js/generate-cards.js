@@ -4,12 +4,14 @@ import { roomTypeTranslations } from './dictionary.js';
 const cardElement = document.querySelector('#card')
   .content
   .querySelector('.popup');
+const listCardsElement = document.querySelector('#map-canvas');
 
 const createCard = ({author, offer}) => {
   const card = cardElement.cloneNode(true);
   const photosListElement = card.querySelector('.popup__photos');
   const photoElement = card.querySelector('.popup__photo');
   const featuresListElements = card.querySelectorAll('.popup__feature');
+  const descriptionElement = card.querySelector('.popup__description');
   const featuresCard = offer.features.map((feature) => `popup__feature--${feature}`);
 
   photosListElement.innerHTML = '';
@@ -30,9 +32,9 @@ const createCard = ({author, offer}) => {
   });
 
   if (!offer.description) {
-    card.querySelector('.popup__description').remove();
+    descriptionElement.remove();
   } else {
-    card.querySelector('.popup__description').textContent = offer.description;
+    descriptionElement.textContent = offer.description;
   }
 
   offer.photos.forEach((src) => {
@@ -56,7 +58,6 @@ const createCardsList = (amount) => {
 };
 
 const renderCards = (amount) => {
-  const listCardsElement = document.querySelector('#map-canvas');
   const cardsList = createCardsList(amount);
 
   listCardsElement.append(cardsList);
