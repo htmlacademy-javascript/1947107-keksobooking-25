@@ -1,5 +1,3 @@
-import { capacityPerRoom } from './dictionary.js';
-
 const form = document.querySelector('.ad-form');
 const capacity = document.querySelector('#capacity');
 const roomNumber = document.querySelector('#room_number');
@@ -8,16 +6,16 @@ const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
 };
+const capacityPerRoom = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
+};
 
 const pristine = new Pristine(form, pristineConfig);
 
-const validateCapacity = (value) => {
-  if (capacityPerRoom[roomNumber.value].includes(value)) {
-    return true;
-  }
-
-  return false;
-};
+const validateCapacity = (value) => capacityPerRoom[roomNumber.value].includes(value);
 
 pristine.addValidator(capacity, validateCapacity, capacityErrorMeassage);
 
