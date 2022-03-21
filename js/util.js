@@ -1,4 +1,4 @@
-const getRandomInt = function (min, max) {
+export const getRandomInt = function (min, max) {
   if (min < 0 || min >= max) {
     throw new Error('Минимальное значение меньше 0, либо больше максимального');
   }
@@ -8,7 +8,7 @@ const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 
-const getRandomFloat = function (min, max, numSigns = 5) {
+export const getRandomFloat = function (min, max, numSigns = 5) {
   if (min < 0 || min >= max) {
     throw new Error('Минимальное значение меньше 0, либо больше максимального');
   }
@@ -17,7 +17,7 @@ const getRandomFloat = function (min, max, numSigns = 5) {
 };
 
 
-const getRandomPropsFromArray = (arrayOfValues) => {
+export const getRandomPropsFromArray = (arrayOfValues) => {
   const finishedArr = [];
   const arr = [ ...arrayOfValues ];
   const randomLengthArr = getRandomInt(1, arr.length);
@@ -33,11 +33,4 @@ const getRandomPropsFromArray = (arrayOfValues) => {
   return finishedArr;
 };
 
-const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];
-
-export {
-  getRandomInt,
-  getRandomFloat,
-  getRandomPropsFromArray,
-  getRandomPropFromArray
-};
+export const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];

@@ -77,6 +77,4 @@ const createAd = (id) => {
   };
 };
 
-const similarAds = (amount) => Array.from({ length: amount }, (v, k) => createAd(++k));
-
-export { similarAds };
+export const similarAds = (amount) => Array.from({ length: amount }, (v, k) => createAd(++k));

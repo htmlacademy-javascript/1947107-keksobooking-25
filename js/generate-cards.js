@@ -57,10 +57,8 @@ const createCardsList = (amount) => {
   return cardsListFragment;
 };
 
-const renderCards = (amount) => {
+export const renderCards = (amount) => {
   const cardsList = createCardsList(amount);
 
   listCardsElement.append(cardsList);
 };
-
-export { renderCards };

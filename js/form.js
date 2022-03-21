@@ -1,6 +1,9 @@
+import { capacityPerRoom } from './dictionary.js';
+
 const form = document.querySelector('.ad-form');
 const capacity = document.querySelector('#capacity');
 const roomNumber = document.querySelector('#room_number');
+const capacityErrorMeassage = 'Количество мест не соответсвует количеству комнат';
 const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
@@ -9,23 +12,16 @@ const pristineConfig = {
 const pristine = new Pristine(form, pristineConfig);
 
 const validateCapacity = (value) => {
-  const roomValue = +roomNumber.value;
+  if (capacityPerRoom[roomNumber.value].includes(value)) {
+    return true;
+  }
 
-  return (roomValue >= +value && roomValue !== 100 && +value !== 0) || (roomValue === 100 && +value === 0);
+  return false;
 };
 
-pristine.addValidator(
-  capacity,
-  validateCapacity,
-  'Количество мест не соответсвует количеству комнат'
-);
+pristine.addValidator(capacity, validateCapacity, capacityErrorMeassage);
 
-export const submitForm = () => {
-  form.addEventListener('submit', (evt) => {
-    const isValid = pristine.validate();
-
-    if (!isValid) {
-      evt.preventDefault();
-    }
-  });
-};
+form.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  pristine.validate();
+});
