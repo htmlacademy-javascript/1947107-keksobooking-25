@@ -1,3 +1,4 @@
 import { renderCards } from './generate-cards.js';
+import './form.js';
 
-renderCards(3);
+renderCards(1);
