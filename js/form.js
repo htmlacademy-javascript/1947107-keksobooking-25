@@ -25,7 +25,7 @@ formNotice.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
-const toInactiveState = (form) => {
+const activateForm = (form) => {
   form.classList.add('ad-form--disabled');
   const fields = form.children;
   for (const field of fields) {
@@ -33,10 +33,10 @@ const toInactiveState = (form) => {
   }
 };
 
-toInactiveState(formNotice);
-toInactiveState(filterForm);
+activateForm(formNotice);
+activateForm(filterForm);
 
-const toActiveState = (form) => {
+const deactivateForm = (form) => {
   form.classList.remove('ad-form--disabled');
   const fields = form.children;
   for (const field of fields) {
@@ -44,5 +44,5 @@ const toActiveState = (form) => {
   }
 };
 
-toActiveState(formNotice);
-toActiveState(filterForm);
+deactivateForm(formNotice);
+deactivateForm(filterForm);
