@@ -1,4 +1,11 @@
-import { renderCards } from './generate-cards.js';
+import { similarAds } from './data.js';
+import { setMarkersOnMap } from './map.js';
 import './form.js';
 
-renderCards(1);
+const generateAds = (amount) => {
+  const data = similarAds(amount);
+
+  setMarkersOnMap(data);
+};
+
+generateAds(10);
