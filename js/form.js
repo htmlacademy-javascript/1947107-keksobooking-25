@@ -3,20 +3,14 @@ const filterForm = document.querySelector('.map__filters');
 const capacityElement = document.querySelector('#capacity');
 const roomNumberElement = document.querySelector('#room_number');
 const priceElement = document.querySelector('#price');
+const addressElement = document.querySelector('#address');
 const capacityErrorMeassage = 'Количество мест не соответсвует количеству комнат';
 const slider = document.querySelector('.ad-form__slider');
 const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
 };
-const capacityPerRoom = {
-  1: ['1'],
-  2: ['1', '2'],
-  3: ['1', '2', '3'],
-  100: ['0']
-};
-
-noUiSlider.create(slider, {
+const sliderConfig = {
   start: 5000,
   connect: 'lower',
   step: 1000,
@@ -32,7 +26,15 @@ noUiSlider.create(slider, {
       return Number(value).toFixed();
     }
   }
-});
+};
+const capacityPerRoom = {
+  1: ['1'],
+  2: ['1', '2'],
+  3: ['1', '2', '3'],
+  100: ['0']
+};
+
+noUiSlider.create(slider, sliderConfig);
 
 slider.noUiSlider.on('update', (val) => {
   priceElement.value = val[0];
@@ -53,9 +55,18 @@ formNotice.addEventListener('submit', (evt) => {
   pristine.validate();
 });
 
-const deactivateForm = (form) => form.classList.add('ad-form--disabled');
+const deactivateForms = () => {
+  formNotice.classList.add('ad-form--disabled');
+  filterForm.classList.add('ad-form--disabled');
+};
 
-deactivateForm(formNotice);
-deactivateForm(filterForm);
+deactivateForms();
 
-export const activateForm = (form) => form.classList.remove('ad-form--disabled');
+export const activateForm = () => {
+  formNotice.classList.remove('ad-form--disabled');
+  filterForm.classList.remove('ad-form--disabled');
+};
+
+export const setAddress = (lat, lng) => {
+  addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+};
