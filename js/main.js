@@ -1,4 +1,2 @@
-import { renderCards } from './generate-cards.js';
+import './map.js';
 import './form.js';
-
-renderCards(1);

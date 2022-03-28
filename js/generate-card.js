@@ -1,12 +1,10 @@
-import { similarAds } from './data.js';
 import { roomTypeTranslations } from './dictionary.js';
 
 const cardElement = document.querySelector('#card')
   .content
   .querySelector('.popup');
-const listCardsElement = document.querySelector('#map-canvas');
 
-const createCard = ({author, offer}) => {
+export const createCard = ({author, offer}) => {
   const card = cardElement.cloneNode(true);
   const photosListElement = card.querySelector('.popup__photos');
   const photoElement = card.querySelector('.popup__photo');
@@ -46,19 +44,4 @@ const createCard = ({author, offer}) => {
   });
 
   return card;
-};
-
-const createCardsList = (amount) => {
-  const cardsListFragment = document.createDocumentFragment();
-  const data = similarAds(amount);
-
-  data.forEach((card) => cardsListFragment.append(createCard(card)));
-
-  return cardsListFragment;
-};
-
-export const renderCards = (amount) => {
-  const cardsList = createCardsList(amount);
-
-  listCardsElement.append(cardsList);
 };
