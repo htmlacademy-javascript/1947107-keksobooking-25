@@ -3,8 +3,12 @@ const filterForm = document.querySelector('.map__filters');
 const capacityElement = document.querySelector('#capacity');
 const roomNumberElement = document.querySelector('#room_number');
 const priceElement = document.querySelector('#price');
+const typeElement = document.querySelector('#type');
 const addressElement = document.querySelector('#address');
+const timeinElement = document.querySelector('#timein');
+const timeoutElement = document.querySelector('#timeout');
 const capacityErrorMeassage = 'Количество мест не соответсвует количеству комнат';
+const priceErrorMeassage = 'Минимальная цена данного типа жилья выше!';
 const slider = document.querySelector('.ad-form__slider');
 const pristineConfig = {
   classTo: 'ad-form__element',
@@ -33,6 +37,13 @@ const capacityPerRoom = {
   3: ['1', '2', '3'],
   100: ['0']
 };
+const minPriceForTypePremise = {
+  bungalow: 0,
+  flat: 1000,
+  hotel: 3000,
+  house: 5000,
+  palace: 10000
+};
 
 noUiSlider.create(slider, sliderConfig);
 
@@ -43,12 +54,20 @@ slider.noUiSlider.on('update', (val) => {
 priceElement.addEventListener('change', ({ target }) => {
   slider.noUiSlider.set(target.value);
 });
+timeinElement.addEventListener('change', ({ target }) => {
+  timeoutElement.value = target.value;
+});
+timeoutElement.addEventListener('change', ({ target }) => {
+  timeinElement.value = target.value;
+});
 
 const pristine = new Pristine(formNotice, pristineConfig);
 
 const validateCapacity = (value) => capacityPerRoom[roomNumberElement.value].includes(value);
+const validatePrice = (value) => minPriceForTypePremise[typeElement.value] <= +value;
 
 pristine.addValidator(capacityElement, validateCapacity, capacityErrorMeassage);
+pristine.addValidator(priceElement, validatePrice, priceErrorMeassage);
 
 formNotice.addEventListener('submit', (evt) => {
   evt.preventDefault();
