@@ -1,12 +1,14 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
-import { data } from './data.js';
+import { getData } from './api.js';
 
-const CENTER = {
+export const CENTER = {
   lat: 35.67737855391475,
   lng: 139.80102539062503
 };
+export const DEFAULT_PRICE = 5000;
 const ZOOM = 12;
+const AMOUNT_ADS = 10;
 
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -52,4 +54,6 @@ const addMarkersOnMap = (markers) => {
   });
 };
 
-addMarkersOnMap(data);
+getData((ads) => {
+  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
+});
