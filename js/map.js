@@ -6,7 +6,6 @@ export const CENTER = {
   lat: 35.67737855391475,
   lng: 139.80102539062503
 };
-export const DEFAULT_PRICE = 5000;
 const ZOOM = 12;
 const AMOUNT_ADS = 10;
 
@@ -31,10 +30,22 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
+const onSuccess = (ads) => {
+  activateForm();
+  setAddress(CENTER.lat, CENTER.lng);
+  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
+};
+
+const onFail = () => {
+  map._container.textContent = 'При загрузке данных произошла ошибка';
+};
+
 const map = L.map('map-canvas')
   .on('load', () => {
-    activateForm();
-    setAddress(CENTER.lat, CENTER.lng);
+    getData(
+      onSuccess,
+      onFail
+    );
   })
   .setView(CENTER, ZOOM);
 
@@ -53,7 +64,3 @@ const addMarkersOnMap = (markers) => {
     pin.bindPopup(createCard(marker));
   });
 };
-
-getData((ads) => {
-  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
-});

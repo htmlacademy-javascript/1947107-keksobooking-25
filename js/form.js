@@ -1,6 +1,8 @@
 import { sendData } from './api.js';
-import { CENTER, DEFAULT_PRICE } from './map.js';
-import { createSuccessPopup, createFailPopup } from './popups.js';
+import { CENTER } from './map.js';
+import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
+
+export const DEFAULT_PRICE = 5000;
 
 const formNotice = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
@@ -14,7 +16,7 @@ const timeoutElement = document.querySelector('#timeout');
 const capacityErrorMeassage = 'Количество мест не соответсвует количеству комнат';
 const priceErrorMeassage = 'Минимальная цена данного типа жилья выше!';
 const slider = document.querySelector('.ad-form__slider');
-const resetElement = document.querySelector('.ad-form__reset');
+const resetButton = document.querySelector('.ad-form__reset');
 const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
@@ -96,21 +98,26 @@ const resetForm = () => {
   priceElement.value = DEFAULT_PRICE;
 };
 
-resetElement.addEventListener('click', resetForm);
+resetButton.addEventListener('click', resetForm);
+
+const onSuccess = () => {
+  resetForm();
+  createPopup(succeessTemplate);
+};
+
+const onFail = () => {
+  createPopup(errorTemplate);
+};
 
 formNotice.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   const formData = new FormData(evt.target);
-  formData.append('address', addressElement.value);
 
   if(isValid) {
     sendData(
-      () => {
-        resetForm();
-        createSuccessPopup();
-      },
-      () => createFailPopup(),
+      onSuccess,
+      onFail,
       formData
     );
   }
