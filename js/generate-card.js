@@ -10,7 +10,6 @@ export const createCard = ({author, offer}) => {
   const photoElement = card.querySelector('.popup__photo');
   const featuresListElements = card.querySelectorAll('.popup__feature');
   const descriptionElement = card.querySelector('.popup__description');
-  const featuresCard = offer.features.map((feature) => `popup__feature--${feature}`);
 
   photosListElement.innerHTML = '';
   card.querySelector('.popup__title').textContent = offer.title;
@@ -21,10 +20,11 @@ export const createCard = ({author, offer}) => {
   card.querySelector('.popup__text--time').textContent = `Заезд после ${ offer.checkin }, выезд до ${ offer.checkout }`;
   card.querySelector('.popup__avatar').src = author.avatar;
 
+  const featuresCard = offer.features?.map((feature) => `popup__feature--${feature}`);
   featuresListElements.forEach((feature) => {
     const classFeature = feature.classList[1];
 
-    if (!featuresCard.includes(classFeature)) {
+    if (!featuresCard?.includes(classFeature)) {
       feature.remove();
     }
   });
@@ -35,7 +35,7 @@ export const createCard = ({author, offer}) => {
     descriptionElement.textContent = offer.description;
   }
 
-  offer.photos.forEach((src) => {
+  offer.photos?.forEach((src) => {
     const cardPhoto = photoElement.cloneNode(true);
 
     cardPhoto.src = src;

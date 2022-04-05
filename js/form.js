@@ -1,3 +1,9 @@
+import { sendData } from './api.js';
+import { CENTER } from './map.js';
+import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
+
+export const DEFAULT_PRICE = 5000;
+
 const formNotice = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
 const capacityElement = document.querySelector('#capacity');
@@ -10,6 +16,7 @@ const timeoutElement = document.querySelector('#timeout');
 const capacityErrorMeassage = 'Количество мест не соответсвует количеству комнат';
 const priceErrorMeassage = 'Минимальная цена данного типа жилья выше!';
 const slider = document.querySelector('.ad-form__slider');
+const resetButton = document.querySelector('.ad-form__reset');
 const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
@@ -69,11 +76,6 @@ const validatePrice = (value) => minPriceForTypePremise[typeElement.value] <= +v
 pristine.addValidator(capacityElement, validateCapacity, capacityErrorMeassage);
 pristine.addValidator(priceElement, validatePrice, priceErrorMeassage);
 
-formNotice.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-  pristine.validate();
-});
-
 const deactivateForms = () => {
   formNotice.classList.add('ad-form--disabled');
   filterForm.classList.add('ad-form--disabled');
@@ -89,3 +91,34 @@ export const activateForm = () => {
 export const setAddress = (lat, lng) => {
   addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
 };
+
+const resetForm = () => {
+  formNotice.reset();
+  setAddress(CENTER.lat, CENTER.lng);
+  priceElement.value = DEFAULT_PRICE;
+};
+
+resetButton.addEventListener('click', resetForm);
+
+const onSuccess = () => {
+  resetForm();
+  createPopup(succeessTemplate);
+};
+
+const onFail = () => {
+  createPopup(errorTemplate);
+};
+
+formNotice.addEventListener('submit', (evt) => {
+  evt.preventDefault();
+  const isValid = pristine.validate();
+  const formData = new FormData(evt.target);
+
+  if(isValid) {
+    sendData(
+      onSuccess,
+      onFail,
+      formData
+    );
+  }
+});

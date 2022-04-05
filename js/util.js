@@ -34,3 +34,5 @@ export const getRandomPropsFromArray = (arrayOfValues) => {
 };
 
 export const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];
+
+export const isEscapeKey = (key) => key === 'Escape';

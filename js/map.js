@@ -1,12 +1,13 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
-import { data } from './data.js';
+import { getData } from './api.js';
 
-const CENTER = {
+export const CENTER = {
   lat: 35.67737855391475,
   lng: 139.80102539062503
 };
 const ZOOM = 12;
+const AMOUNT_ADS = 10;
 
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -29,10 +30,22 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
+const onSuccess = (ads) => {
+  activateForm();
+  setAddress(CENTER.lat, CENTER.lng);
+  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
+};
+
+const onFail = () => {
+  map._container.textContent = 'При загрузке данных произошла ошибка';
+};
+
 const map = L.map('map-canvas')
   .on('load', () => {
-    activateForm();
-    setAddress(CENTER.lat, CENTER.lng);
+    getData(
+      onSuccess,
+      onFail
+    );
   })
   .setView(CENTER, ZOOM);
 
@@ -51,5 +64,3 @@ const addMarkersOnMap = (markers) => {
     pin.bindPopup(createCard(marker));
   });
 };
-
-addMarkersOnMap(data);
