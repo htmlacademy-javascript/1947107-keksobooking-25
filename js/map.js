@@ -1,7 +1,7 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
-import { filterMarkers } from './filters.js';
+import { filterMarkers, saveData } from './filters.js';
 import './filters.js';
 
 export const CENTER = {
@@ -33,29 +33,31 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
+const layerGroup = L.layerGroup();
 let layer;
 
-const addMarkersOnMap = (markers) => {
+export const addMarkersOnMap = (markers) => {
   markers.forEach((marker) => {
     const pin = L.marker([marker.location.lat, marker.location.lng], {
       icon: markerIcon
     });
     pin.bindPopup(createCard(marker));
+
     layer = pin.addTo(map);
-    layer.addTo(map);
+    layerGroup
+      .addLayer(layer)
+      .addTo(map);
   });
 };
 
-export const clearMarkersOnMap = (markers) => {
-  if (layer) {
-    layer.remove();
-  }
-  addMarkersOnMap(markers);
+export const clearMarkersOnMap = () => {
+  layerGroup.clearLayers();
 };
 
 const onSuccess = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
+  saveData(ads);
   filterMarkers(ads);
 };
 
