@@ -1,3 +1,5 @@
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+
 export const getRandomInt = function (min, max) {
   if (min < 0 || min >= max) {
     throw new Error('Минимальное значение меньше 0, либо больше максимального');
@@ -36,3 +38,5 @@ export const getRandomPropsFromArray = (arrayOfValues) => {
 export const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];
 
 export const isEscapeKey = (key) => key === 'Escape';
+
+export const checkAvailableType = (file) => FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it));

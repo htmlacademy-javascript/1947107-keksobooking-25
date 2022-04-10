@@ -9,6 +9,8 @@ export const CENTER = {
 const ZOOM = 12;
 const AMOUNT_ADS = 10;
 
+const map = L.map('map-canvas');
+
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
   {
@@ -30,24 +32,9 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
-const onSuccess = (ads) => {
-  activateForm();
-  setAddress(CENTER.lat, CENTER.lng);
-  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
-};
-
 const onFail = () => {
   map._container.textContent = 'При загрузке данных произошла ошибка';
 };
-
-const map = L.map('map-canvas')
-  .on('load', () => {
-    getData(
-      onSuccess,
-      onFail
-    );
-  })
-  .setView(CENTER, ZOOM);
 
 tileLayer.addTo(map);
 mainMarker.addTo(map);
@@ -64,3 +51,17 @@ const addMarkersOnMap = (markers) => {
     pin.bindPopup(createCard(marker));
   });
 };
+
+const onSuccess = (ads) => {
+  activateForm();
+  setAddress(CENTER.lat, CENTER.lng);
+  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
+};
+
+map.on('load', () => {
+  getData(
+    onSuccess,
+    onFail
+  );
+})
+  .setView(CENTER, ZOOM);
