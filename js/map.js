@@ -1,7 +1,8 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
-import { filterMarkers, saveData } from './filters.js';
+import { getFilteredAds } from './filters.js';
+import { saveData, returnData } from './data.js';
 import './filters.js';
 
 export const CENTER = {
@@ -37,6 +38,7 @@ const layerGroup = L.layerGroup();
 let layer;
 
 export const addMarkersOnMap = (markers) => {
+  console.log('object');
   markers.forEach((marker) => {
     const pin = L.marker([marker.location.lat, marker.location.lng], {
       icon: markerIcon
@@ -58,7 +60,7 @@ const onSuccess = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  filterMarkers(ads);
+  getFilteredAds(returnData());
 };
 
 const onFail = () => {

@@ -1,90 +1,91 @@
 import { clearMarkersOnMap, addMarkersOnMap } from './map.js';
 import { debounce } from './util.js';
+import { returnData } from './data.js';
 
 const AMOUNT_ADS = 10;
 const RERENDER_DELAY = 500;
-let ADS = null;
 
+const filtersElements = document.querySelector('.map__filters');
 const housingTypeElement = document.querySelector('#housing-type');
 const housingPriceElement = document.querySelector('#housing-price');
 const housingRoomsElement = document.querySelector('#housing-rooms');
 const housingGuestsElement = document.querySelector('#housing-guests');
-const housingFeaturesElement = document.querySelectorAll('.map__checkbox');
+const housingFeaturesElements = document.querySelectorAll('.map__checkbox');
 
-export const saveData = (ads) => {
-  ADS = ads;
+const filterByType = (ad) => {
+  const typeValue = housingTypeElement.value;
+  console.log('type');
+
+  return typeValue === 'any' || ad.offer.type === typeValue;
 };
 
-export const filterMarkers = (ads) => {
-  const typeValue = housingTypeElement.value;
+const filterByPrice = (ad) => {
   const priceValue = housingPriceElement.value;
+
+  if (priceValue === 'any') {
+    return true;
+  }
+  if (priceValue === 'middle') {
+    return ad.offer.price >= 10000 && ad.offer.price <= 50000;
+  }
+  if (priceValue === 'low') {
+    return ad.offer.price <= 10000;
+  }
+  if (priceValue === 'high') {
+    return ad.offer.price >= 50000;
+  }
+};
+
+const filterByRooms = (ad) => {
   const roomsValue = housingRoomsElement.value;
+
+  if (roomsValue === 'any') {
+    return true;
+  }
+
+  return ad.offer.rooms === +roomsValue;
+};
+
+const filterByGuests = (ad) => {
   const guestsValue = housingGuestsElement.value;
 
-  const fiilteredAds = ads
-    .slice()
-    .filter((item) => {
-      if (typeValue === 'any') {
-        return item;
-      }
+  if (guestsValue === 'any') {
+    return true;
+  }
 
-      return item.offer.type === typeValue;
-    })
-    .filter((item) => {
-      if (roomsValue === 'any') {
-        return item;
-      }
-
-      return item.offer.rooms === +roomsValue;
-    })
-    .filter((item) => {
-      if (priceValue === 'any') {
-        return item;
-      }
-      if (priceValue === 'middle') {
-        return item.offer.price >= 10000 && item.offer.price <= 50000;
-      }
-      if (priceValue === 'low') {
-        return item.offer.price <= 10000;
-      }
-      if (priceValue === 'high') {
-        return item.offer.price >= 50000;
-      }
-    })
-    .filter((item) => {
-      if (guestsValue === 'any') {
-        return item;
-      }
-
-      return item.offer.rooms === +guestsValue;
-    })
-    .filter((item) => {
-      const checkedFeatures = [];
-
-      housingFeaturesElement.forEach((feature) => {
-        if (item.offer.features) {
-          if (feature.checked && !item.offer.features.includes(feature.value)) {
-            return checkedFeatures.push(false);
-          } else {
-            return checkedFeatures.push(true);
-          }
-        }
-      });
-
-      if (!checkedFeatures.includes(false)) {
-        return item;
-      }
-    });
-
-  clearMarkersOnMap();
-  addMarkersOnMap(fiilteredAds.slice(0, AMOUNT_ADS));
+  return ad.offer.rooms === +guestsValue;
 };
 
-housingTypeElement.addEventListener('change', () => debounce(() => filterMarkers(ADS), RERENDER_DELAY));
-housingPriceElement.addEventListener('change', () => debounce(() => filterMarkers(ADS), RERENDER_DELAY));
-housingRoomsElement.addEventListener('change', () => debounce(() => filterMarkers(ADS), RERENDER_DELAY));
-housingGuestsElement.addEventListener('change', () => debounce(() => filterMarkers(ADS), RERENDER_DELAY));
-housingFeaturesElement.forEach((feature) => {
-  feature.addEventListener('change', () => debounce(() => filterMarkers(ADS), RERENDER_DELAY));
-});
+const filterByFuetures = (ad) => {
+  const checkedFeatures = [];
 
+  housingFeaturesElements.forEach((feature) => {
+    if (ad.offer.features) {
+      if (feature.checked && !ad.offer.features.includes(feature.value)) {
+        return checkedFeatures.push(false);
+      } else {
+        return checkedFeatures.push(true);
+      }
+    }
+  });
+
+  return !checkedFeatures.includes(false);
+};
+
+export const getFilteredAds = (ads) => {
+  console.log(ads);
+  const filteredAds = ads.slice();
+
+  const test = filteredAds.filters((ad) => {
+    console.log(ad);
+    return true;
+  });
+
+  console.log(test);
+  console.log(filteredAds);
+  // return filteredAds;
+  clearMarkersOnMap();
+  addMarkersOnMap(filteredAds.slice(0, AMOUNT_ADS));
+};
+
+filtersElements.addEventListener('change', debounce(() => getFilteredAds(returnData()), RERENDER_DELAY));
