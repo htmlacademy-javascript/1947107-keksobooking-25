@@ -20,14 +20,16 @@ export const createCard = ({author, offer}) => {
   card.querySelector('.popup__text--time').textContent = `Заезд после ${ offer.checkin }, выезд до ${ offer.checkout }`;
   card.querySelector('.popup__avatar').src = author.avatar;
 
-  const featuresCard = offer.features?.map((feature) => `popup__feature--${feature}`);
-  featuresListElements.forEach((feature) => {
-    const classFeature = feature.classList[1];
+  if (offer.features) {
+    const featuresCard = offer.features.map((feature) => `popup__feature--${feature}`);
+    featuresListElements.forEach((feature) => {
+      const classFeature = feature.classList[1];
 
-    if (!featuresCard?.includes(classFeature)) {
-      feature.remove();
-    }
-  });
+      if (!featuresCard.includes(classFeature)) {
+        feature.remove();
+      }
+    });
+  }
 
   if (!offer.description) {
     descriptionElement.remove();
@@ -35,13 +37,15 @@ export const createCard = ({author, offer}) => {
     descriptionElement.textContent = offer.description;
   }
 
-  offer.photos?.forEach((src) => {
-    const cardPhoto = photoElement.cloneNode(true);
+  if (offer.photos) {
+    offer.photos.forEach((src) => {
+      const cardPhoto = photoElement.cloneNode(true);
 
-    cardPhoto.src = src;
+      cardPhoto.src = src;
 
-    photosListElement.append(cardPhoto);
-  });
+      photosListElement.append(cardPhoto);
+    });
+  }
 
   return card;
 };
