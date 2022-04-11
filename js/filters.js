@@ -1,8 +1,7 @@
-import { clearMarkersOnMap, addMarkersOnMap } from './map.js';
+import { updateLayerOnMap } from './map.js';
 import { debounce } from './util.js';
 import { returnData } from './data.js';
 
-const AMOUNT_ADS = 10;
 const RERENDER_DELAY = 500;
 
 const filtersElements = document.querySelector('.map__filters');
@@ -14,7 +13,6 @@ const housingFeaturesElements = document.querySelectorAll('.map__checkbox');
 
 const filterByType = (ad) => {
   const typeValue = housingTypeElement.value;
-  console.log('type');
 
   return typeValue === 'any' || ad.offer.type === typeValue;
 };
@@ -39,21 +37,13 @@ const filterByPrice = (ad) => {
 const filterByRooms = (ad) => {
   const roomsValue = housingRoomsElement.value;
 
-  if (roomsValue === 'any') {
-    return true;
-  }
-
-  return ad.offer.rooms === +roomsValue;
+  return roomsValue === 'any' || ad.offer.rooms === +roomsValue;
 };
 
 const filterByGuests = (ad) => {
   const guestsValue = housingGuestsElement.value;
 
-  if (guestsValue === 'any') {
-    return true;
-  }
-
-  return ad.offer.rooms === +guestsValue;
+  return guestsValue === 'any' || ad.offer.rooms === +guestsValue;
 };
 
 const filterByFuetures = (ad) => {
@@ -73,19 +63,21 @@ const filterByFuetures = (ad) => {
 };
 
 export const getFilteredAds = (ads) => {
-  console.log(ads);
-  const filteredAds = ads.slice();
+  const filteredAds = ads
+    .slice()
+    .filter((ad) => filterByType(ad) && filterByPrice(ad) && filterByRooms(ad) && filterByGuests(ad) && filterByFuetures(ad));
 
-  const test = filteredAds.filters((ad) => {
-    console.log(ad);
-    return true;
-  });
-
-  console.log(test);
-  console.log(filteredAds);
-  // return filteredAds;
-  clearMarkersOnMap();
-  addMarkersOnMap(filteredAds.slice(0, AMOUNT_ADS));
+  return filteredAds;
 };
 
-filtersElements.addEventListener('change', debounce(() => getFilteredAds(returnData()), RERENDER_DELAY));
+filtersElements.addEventListener(
+  'change',
+  debounce(
+    () => {
+      const filteredAds = getFilteredAds(returnData());
+
+      updateLayerOnMap(filteredAds);
+    },
+    RERENDER_DELAY
+  )
+);

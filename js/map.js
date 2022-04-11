@@ -1,7 +1,6 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
-import { getFilteredAds } from './filters.js';
 import { saveData, returnData } from './data.js';
 import './filters.js';
 
@@ -10,8 +9,11 @@ export const CENTER = {
   lng: 139.80102539062503
 };
 const ZOOM = 12;
+const AMOUNT_ADS = 10;
 
 const map = L.map('map-canvas');
+const layerGroup = L.layerGroup();
+let layer;
 
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -34,21 +36,21 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
-const layerGroup = L.layerGroup();
-let layer;
+const addMarkersOnMap = (pin) => {
+  layer = pin;
+  layerGroup
+    .addLayer(layer)
+    .addTo(map);
+};
 
-export const addMarkersOnMap = (markers) => {
-  console.log('object');
+export const createMarkers = (markers) => {
   markers.forEach((marker) => {
     const pin = L.marker([marker.location.lat, marker.location.lng], {
       icon: markerIcon
     });
     pin.bindPopup(createCard(marker));
 
-    layer = pin.addTo(map);
-    layerGroup
-      .addLayer(layer)
-      .addTo(map);
+    addMarkersOnMap(pin);
   });
 };
 
@@ -56,21 +58,26 @@ export const clearMarkersOnMap = () => {
   layerGroup.clearLayers();
 };
 
-const onSuccess = (ads) => {
+export const updateLayerOnMap = (markers) => {
+  clearMarkersOnMap();
+  createMarkers(markers.slice(0, AMOUNT_ADS));
+};
+
+const onSuccessRequest = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  getFilteredAds(returnData());
+  updateLayerOnMap(returnData());
 };
 
-const onFail = () => {
+const onFailRequest = () => {
   map._container.textContent = 'При загрузке данных произошла ошибка';
 };
 
 map.on('load', () => {
   getData(
-    onSuccess,
-    onFail
+    onSuccessRequest,
+    onFailRequest
   );
 })
   .setView(CENTER, ZOOM);
