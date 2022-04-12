@@ -4,4 +4,4 @@ export const saveData = (ads) => {
   data = ads;
 };
 
-export const returnData = () => data;
+export const getLocalData = () => data;

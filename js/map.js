@@ -1,7 +1,7 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
-import { saveData, returnData } from './data.js';
+import { saveData, getLocalData } from './data.js';
 import './filters.js';
 
 export const CENTER = {
@@ -12,8 +12,7 @@ const ZOOM = 12;
 const AMOUNT_ADS = 10;
 
 const map = L.map('map-canvas');
-const layerGroup = L.layerGroup();
-let layer;
+const layerGroup = L.layerGroup().addTo(map);
 
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -37,37 +36,38 @@ const mainMarker = L.marker(CENTER, {
 });
 
 const addMarkersOnMap = (pin) => {
-  layer = pin;
   layerGroup
-    .addLayer(layer)
+    .addLayer(pin)
     .addTo(map);
 };
 
-export const createMarkers = (markers) => {
-  markers.forEach((marker) => {
-    const pin = L.marker([marker.location.lat, marker.location.lng], {
-      icon: markerIcon
-    });
-    pin.bindPopup(createCard(marker));
+export const renderMarkers = (markers) => {
+  markers
+    .slice(0, AMOUNT_ADS)
+    .forEach((marker) => {
+      const pin = L.marker([marker.location.lat, marker.location.lng], {
+        icon: markerIcon
+      });
+      pin.bindPopup(createCard(marker));
 
-    addMarkersOnMap(pin);
-  });
+      addMarkersOnMap(pin);
+    });
 };
 
 export const clearMarkersOnMap = () => {
   layerGroup.clearLayers();
 };
 
-export const updateLayerOnMap = (markers) => {
+export const updateMarkersOnMap = (markers) => {
   clearMarkersOnMap();
-  createMarkers(markers.slice(0, AMOUNT_ADS));
+  renderMarkers(markers);
 };
 
 const onSuccessRequest = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  updateLayerOnMap(returnData());
+  updateMarkersOnMap(getLocalData());
 };
 
 const onFailRequest = () => {
