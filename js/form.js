@@ -1,8 +1,10 @@
 import { sendData } from './api.js';
-import { CENTER } from './map.js';
+import { CENTER, mainMarker } from './map.js';
 import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
+import { changeFilters } from './filters.js';
 
 export const DEFAULT_PRICE = 5000;
+const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
 const formNotice = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
@@ -17,6 +19,8 @@ const capacityErrorMeassage = 'Количество мест не соответ
 const priceErrorMeassage = 'Минимальная цена данного типа жилья выше!';
 const slider = document.querySelector('.ad-form__slider');
 const resetButton = document.querySelector('.ad-form__reset');
+const avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
+const photoPreviewElement = document.querySelector('.ad-form__photo img');
 const pristineConfig = {
   classTo: 'ad-form__element',
   errorTextParent: 'ad-form__element'
@@ -90,10 +94,16 @@ export const activateForm = () => {
 
 export const setAddress = (lat, lng) => {
   addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  addressElement.placeholder = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  mainMarker.setLatLng([lat, lng]);
 };
 
 const resetForm = () => {
   formNotice.reset();
+  filterForm.reset();
+  changeFilters();
+  avatarPreviewElement.src = DEFAULT_AVATAR;
+  photoPreviewElement.src = '';
   setAddress(CENTER.lat, CENTER.lng);
   priceElement.value = DEFAULT_PRICE;
 };
