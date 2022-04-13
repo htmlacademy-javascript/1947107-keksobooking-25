@@ -36,3 +36,13 @@ export const getRandomPropsFromArray = (arrayOfValues) => {
 export const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 1)];
 
 export const isEscapeKey = (key) => key === 'Escape';
+
+export const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
