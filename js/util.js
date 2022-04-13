@@ -39,4 +39,14 @@ export const getRandomPropFromArray = (arr) => arr[getRandomInt(0, arr.length - 
 
 export const isEscapeKey = (key) => key === 'Escape';
 
+export const debounce = (callback, timeoutDelay = 500) => {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+};
+
 export const checkAvailableType = (file) => FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it));

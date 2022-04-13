@@ -1,6 +1,8 @@
 import { activateForm, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
+import { saveData, getLocalData } from './data.js';
+import './filters.js';
 
 export const CENTER = {
   lat: 35.67737855391475,
@@ -10,6 +12,7 @@ const ZOOM = 12;
 const AMOUNT_ADS = 10;
 
 const map = L.map('map-canvas');
+const layerGroup = L.layerGroup().addTo(map);
 
 const tileLayer = L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -32,36 +35,55 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
-const onFail = () => {
+const addMarkersOnMap = (pin) => {
+  layerGroup
+    .addLayer(pin)
+    .addTo(map);
+};
+
+export const renderMarkers = (markers) => {
+  markers
+    .slice(0, AMOUNT_ADS)
+    .forEach((marker) => {
+      const pin = L.marker([marker.location.lat, marker.location.lng], {
+        icon: markerIcon
+      });
+      pin.bindPopup(createCard(marker));
+
+      addMarkersOnMap(pin);
+    });
+};
+
+export const clearMarkersOnMap = () => {
+  layerGroup.clearLayers();
+};
+
+export const updateMarkersOnMap = (markers) => {
+  clearMarkersOnMap();
+  renderMarkers(markers);
+};
+
+const onSuccessRequest = (ads) => {
+  activateForm();
+  setAddress(CENTER.lat, CENTER.lng);
+  saveData(ads);
+  updateMarkersOnMap(getLocalData());
+};
+
+const onFailRequest = () => {
   map._container.textContent = 'При загрузке данных произошла ошибка';
 };
+
+map.on('load', () => {
+  getData(
+    onSuccessRequest,
+    onFailRequest
+  );
+})
+  .setView(CENTER, ZOOM);
 
 tileLayer.addTo(map);
 mainMarker.addTo(map);
 mainMarker.on('drag', ({latlng}) => {
   setAddress(latlng.lat, latlng.lng);
 });
-
-const addMarkersOnMap = (markers) => {
-  markers.forEach((marker) => {
-    const pin = L.marker([marker.location.lat, marker.location.lng], {
-      icon: markerIcon
-    });
-    pin.addTo(map);
-    pin.bindPopup(createCard(marker));
-  });
-};
-
-const onSuccess = (ads) => {
-  activateForm();
-  setAddress(CENTER.lat, CENTER.lng);
-  addMarkersOnMap(ads.slice(0, AMOUNT_ADS));
-};
-
-map.on('load', () => {
-  getData(
-    onSuccess,
-    onFail
-  );
-})
-  .setView(CENTER, ZOOM);
