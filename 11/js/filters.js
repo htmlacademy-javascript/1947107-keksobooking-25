@@ -58,7 +58,7 @@ const filterByFuetures = (ad) => {
 export const getFilteredAds = (ads) =>  ads
   .filter((ad) => filterByType(ad) && filterByPrice(ad) && filterByRooms(ad) && filterByGuests(ad) && filterByFuetures(ad));
 
-const changeFilters = debounce(
+export const changeFilters = debounce(
   () => {
     const filteredAds = getFilteredAds(getLocalData());
 

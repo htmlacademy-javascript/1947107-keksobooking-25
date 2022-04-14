@@ -30,7 +30,7 @@ const markerIcon = L.icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
-const mainMarker = L.marker(CENTER, {
+export const mainMarker = L.marker(CENTER, {
   icon: mainMarkerIcon,
   draggable: true
 });
@@ -83,7 +83,7 @@ map.on('load', () => {
   .setView(CENTER, ZOOM);
 
 tileLayer.addTo(map);
-mainMarker.addTo(map);
-mainMarker.on('drag', ({latlng}) => {
-  setAddress(latlng.lat, latlng.lng);
-});
+mainMarker.addTo(map)
+  .on('drag', ({latlng}) => {
+    setAddress(latlng.lat, latlng.lng);
+  });
