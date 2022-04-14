@@ -1,9 +1,10 @@
-import { checkAvailableType } from './util.js';
-
+const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
 const fileChooserAvatar = document.querySelector('#avatar');
 const fileChooserImages = document.querySelector('#images');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
 const imagesPreview = document.querySelector('.ad-form__photo img');
+
+const checkAvailableType = (file) => FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it));
 
 const setPreview = (fileChooser, previewContainer) => {
   const file = fileChooser.files[0];

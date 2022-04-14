@@ -1,5 +1,3 @@
-const FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-
 export const getRandomInt = function (min, max) {
   if (min < 0 || min >= max) {
     throw new Error('Минимальное значение меньше 0, либо больше максимального');
@@ -48,5 +46,3 @@ export const debounce = (callback, timeoutDelay = 500) => {
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
 };
-
-export const checkAvailableType = (file) => FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it));
