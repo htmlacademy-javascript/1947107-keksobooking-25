@@ -3,7 +3,7 @@ import { CENTER, mainMarker } from './map.js';
 import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
 import { changeFilters } from './filters.js';
 
-export const DEFAULT_PRICE = 5000;
+const DEFAULT_PRICE = 5000;
 const DEFAULT_AVATAR = 'img/muffin-grey.svg';
 
 const formNotice = document.querySelector('.ad-form');
