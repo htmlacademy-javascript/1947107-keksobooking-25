@@ -21,16 +21,16 @@ const tileLayer = L.tileLayer(
   },
 );
 const mainMarkerIcon = L.icon({
-  iconUrl: '../img/main-pin.svg',
+  iconUrl: './img/main-pin.svg',
   iconSize: [52, 52],
   iconAnchor: [26, 52],
 });
 const markerIcon = L.icon({
-  iconUrl: '../img/pin.svg',
+  iconUrl: './img/pin.svg',
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
-const mainMarker = L.marker(CENTER, {
+export const mainMarker = L.marker(CENTER, {
   icon: mainMarkerIcon,
   draggable: true
 });
@@ -83,7 +83,7 @@ map.on('load', () => {
   .setView(CENTER, ZOOM);
 
 tileLayer.addTo(map);
-mainMarker.addTo(map);
-mainMarker.on('drag', ({latlng}) => {
-  setAddress(latlng.lat, latlng.lng);
-});
+mainMarker.addTo(map)
+  .on('drag', ({latlng}) => {
+    setAddress(latlng.lat, latlng.lng);
+  });

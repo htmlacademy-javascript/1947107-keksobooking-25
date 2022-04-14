@@ -45,21 +45,20 @@ const filterByGuests = (ad) => {
   return value === 'any' || ad.offer.rooms === +value;
 };
 
-const filterByFuetures = (ad) => Array
-  .from(document.querySelectorAll('.map__checkbox:checked'))
-  .map((element) => element.value)
-  .every((element) => {
-    if (ad.offer.features) {
-      return ad.offer.features.includes(element);
-    }
+const filterByFuetures = (ad) => {
+  const checkedFeatures = Array
+    .from(document.querySelectorAll('.map__checkbox:checked'))
+    .map((element) => element.value);
 
-    return false;
-  });
+  return ad.offer.features
+    ? checkedFeatures.every((feature) => ad.offer.features.includes(feature))
+    : checkedFeatures.length === 0;
+};
 
 export const getFilteredAds = (ads) =>  ads
   .filter((ad) => filterByType(ad) && filterByPrice(ad) && filterByRooms(ad) && filterByGuests(ad) && filterByFuetures(ad));
 
-const changeFilters = () => debounce(
+export const changeFilters = debounce(
   () => {
     const filteredAds = getFilteredAds(getLocalData());
 
@@ -68,4 +67,4 @@ const changeFilters = () => debounce(
   FILTERS_DELAY
 );
 
-filtersElements.addEventListener('change', changeFilters());
+filtersElements.addEventListener('change', changeFilters);

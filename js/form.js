@@ -1,8 +1,11 @@
 import { sendData } from './api.js';
-import { CENTER } from './map.js';
+import { CENTER, mainMarker } from './map.js';
 import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
+import { updateMarkersOnMap } from './map.js';
+import { getLocalData } from './data.js';
+import { clearPreview } from './photo.js';
 
-export const DEFAULT_PRICE = 5000;
+const DEFAULT_PRICE = 5000;
 
 const formNotice = document.querySelector('.ad-form');
 const filterForm = document.querySelector('.map__filters');
@@ -90,10 +93,15 @@ export const activateForm = () => {
 
 export const setAddress = (lat, lng) => {
   addressElement.value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  addressElement.placeholder = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  mainMarker.setLatLng([lat, lng]);
 };
 
 const resetForm = () => {
   formNotice.reset();
+  filterForm.reset();
+  updateMarkersOnMap(getLocalData());
+  clearPreview();
   setAddress(CENTER.lat, CENTER.lng);
   priceElement.value = DEFAULT_PRICE;
 };
