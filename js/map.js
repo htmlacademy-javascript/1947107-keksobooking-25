@@ -58,7 +58,7 @@ export const clearMarkersOnMap = () => {
   layerGroup.clearLayers();
 };
 
-export const updateMarkersOnMap = (markers) => {
+export const resetMap = (markers) => {
   clearMarkersOnMap();
   renderMarkers(markers);
 };
@@ -67,7 +67,7 @@ const onSuccessRequest = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  updateMarkersOnMap(getLocalData());
+  resetMap(getLocalData());
 };
 
 const onFailRequest = () => {

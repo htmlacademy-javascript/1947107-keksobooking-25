@@ -1,14 +1,14 @@
 import { sendData } from './api.js';
 import { CENTER, mainMarker } from './map.js';
 import { createPopup, succeessTemplate, errorTemplate } from './popups.js';
-import { updateMarkersOnMap } from './map.js';
+import { resetMap } from './map.js';
 import { getLocalData } from './data.js';
 import { clearPreview } from './photo.js';
 
 const DEFAULT_PRICE = 5000;
 
-const formNotice = document.querySelector('.ad-form');
-const filterForm = document.querySelector('.map__filters');
+const formAd = document.querySelector('.ad-form');
+const formFilter = document.querySelector('.map__filters');
 const capacityElement = document.querySelector('#capacity');
 const roomNumberElement = document.querySelector('#room_number');
 const priceElement = document.querySelector('#price');
@@ -71,7 +71,7 @@ timeoutElement.addEventListener('change', ({ target }) => {
   timeinElement.value = target.value;
 });
 
-const pristine = new Pristine(formNotice, pristineConfig);
+const pristine = new Pristine(formAd, pristineConfig);
 
 const validateCapacity = (value) => capacityPerRoom[roomNumberElement.value].includes(value);
 const validatePrice = (value) => minPriceForTypePremise[typeElement.value] <= +value;
@@ -80,15 +80,15 @@ pristine.addValidator(capacityElement, validateCapacity, capacityErrorMeassage);
 pristine.addValidator(priceElement, validatePrice, priceErrorMeassage);
 
 const deactivateForms = () => {
-  formNotice.classList.add('ad-form--disabled');
-  filterForm.classList.add('ad-form--disabled');
+  formAd.classList.add('ad-form--disabled');
+  formFilter.classList.add('ad-form--disabled');
 };
 
 deactivateForms();
 
 export const activateForm = () => {
-  formNotice.classList.remove('ad-form--disabled');
-  filterForm.classList.remove('ad-form--disabled');
+  formAd.classList.remove('ad-form--disabled');
+  formFilter.classList.remove('ad-form--disabled');
 };
 
 export const setAddress = (lat, lng) => {
@@ -98,9 +98,9 @@ export const setAddress = (lat, lng) => {
 };
 
 const resetForm = () => {
-  formNotice.reset();
-  filterForm.reset();
-  updateMarkersOnMap(getLocalData());
+  formAd.reset();
+  formFilter.reset();
+  resetMap(getLocalData());
   clearPreview();
   setAddress(CENTER.lat, CENTER.lng);
   priceElement.value = DEFAULT_PRICE;
@@ -117,7 +117,7 @@ const onFail = () => {
   createPopup(errorTemplate);
 };
 
-formNotice.addEventListener('submit', (evt) => {
+formAd.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   const formData = new FormData(evt.target);

@@ -1,4 +1,4 @@
-import { updateMarkersOnMap } from './map.js';
+import { resetMap } from './map.js';
 import { debounce } from './util.js';
 import { getLocalData } from './data.js';
 
@@ -55,14 +55,14 @@ const filterByFuetures = (ad) => {
     : checkedFeatures.length === 0;
 };
 
-export const getFilteredAds = (ads) =>  ads
+const getFilteredAds = (ads) =>  ads
   .filter((ad) => filterByType(ad) && filterByPrice(ad) && filterByRooms(ad) && filterByGuests(ad) && filterByFuetures(ad));
 
-export const changeFilters = debounce(
+const changeFilters = debounce(
   () => {
     const filteredAds = getFilteredAds(getLocalData());
 
-    updateMarkersOnMap(filteredAds);
+    resetMap(filteredAds);
   },
   FILTERS_DELAY
 );
