@@ -1,4 +1,4 @@
-import { activateForm, setAddress } from './form.js';
+import { activateForms, setAddress } from './form.js';
 import { createCard } from './generate-card.js';
 import { getData } from './api.js';
 import { saveData, getLocalData } from './data.js';
@@ -9,7 +9,7 @@ export const CENTER = {
   lng: 139.80102539062503
 };
 const ZOOM = 12;
-const AMOUNT_ADS = 10;
+const MAX_AMOUNT_ADS = 10;
 const FAIL_MESSAGE = 'При загрузке данных произошла ошибка';
 
 const map = L.map('map-canvas');
@@ -42,7 +42,7 @@ export const renderMarkers = (markers) => {
   layerGroup.clearLayers();
 
   markers
-    .slice(0, AMOUNT_ADS)
+    .slice(0, MAX_AMOUNT_ADS)
     .forEach((marker) => {
       const pin = L.marker([marker.location.lat, marker.location.lng], {
         icon: markerIcon
@@ -61,7 +61,7 @@ export const resetMap = () => {
 };
 
 const onSuccessRequest = (ads) => {
-  activateForm();
+  activateForms();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
   renderMarkers(ads);
