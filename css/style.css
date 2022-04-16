@@ -612,7 +612,7 @@ fieldset {
 }
 
 .ad-form__photo img {
-  max-width: 50%;
+  max-width: 100%;
   object-fit: contain;
 }
 

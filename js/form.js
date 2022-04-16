@@ -7,6 +7,7 @@ const ERROR_MESSAGES = {
   CAPACITY: 'Количество мест не соответсвует количеству комнат',
   PRICE: 'Минимальная цена данного типа жилья выше!'
 };
+const DEFAULT_PRICE_VALUE = 1000;
 
 const MinRoomPrice = {
   bungalow: 0,
@@ -90,7 +91,7 @@ const deactivateForms = () => {
 
 deactivateForms();
 
-export const activateForm = () => {
+export const activateForms = () => {
   formAd.classList.remove('ad-form--disabled');
   formFilter.classList.remove('ad-form--disabled');
 };
@@ -107,8 +108,8 @@ const removeErrors = () => {
 };
 
 const resetPrice = () => {
-  setPricePlaceholder(typeElement.value);
-  setSliderValue(MinRoomPrice[typeElement.value]);
+  priceElement.placeholder = DEFAULT_PRICE_VALUE;
+  setSliderValue(DEFAULT_PRICE_VALUE);
 };
 
 const resetForm = () => {
