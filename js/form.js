@@ -1,7 +1,6 @@
 import { sendData } from './api.js';
-import { CENTER, renderMarkers, resetMap } from './map.js';
+import { CENTER, resetMap } from './map.js';
 import { createPopup, successTemplate, errorTemplate } from './popups.js';
-import { getLocalData } from './data.js';
 import { clearPreview } from './photo.js';
 
 const ERROR_MESSAGES = {
@@ -60,7 +59,7 @@ const sliderConfig = {
 
 noUiSlider.create(slider, sliderConfig);
 
-const onPricePlaceholder = (type) => {
+const setPricePlaceholder = (type) => {
   priceElement.placeholder = MinRoomPrice[type];
 };
 
@@ -108,16 +107,15 @@ const removeErrors = () => {
 };
 
 const resetPrice = () => {
-  onPricePlaceholder(typeElement.value);
+  setPricePlaceholder(typeElement.value);
   setSliderValue(MinRoomPrice[typeElement.value]);
 };
 
 const resetForm = () => {
   formAd.reset();
   formFilter.reset();
-  renderMarkers(getLocalData());
-  clearPreview();
   resetMap();
+  clearPreview();
   removeErrors();
   resetPrice();
   setAddress(CENTER.lat, CENTER.lng);
@@ -156,7 +154,7 @@ formAd.addEventListener('submit', (evt) => {
   }
 });
 
-typeElement.addEventListener('change', (evt) => onPricePlaceholder(evt.target.value));
+typeElement.addEventListener('change', (evt) => setPricePlaceholder(evt.target.value));
 roomNumberElement.addEventListener('change', () => pristine.validate());
 slider.noUiSlider.on('change', (val) => {
   priceElement.value = val[0];
