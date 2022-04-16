@@ -1,7 +1,6 @@
 import { sendData } from './api.js';
-import { CENTER, renderMarkers, resetMap } from './map.js';
+import { CENTER, resetMap } from './map.js';
 import { createPopup, successTemplate, errorTemplate } from './popups.js';
-import { getLocalData } from './data.js';
 import { clearPreview } from './photo.js';
 
 const ERROR_MESSAGES = {
