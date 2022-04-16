@@ -7,20 +7,21 @@ export const errorTemplate = document.querySelector('#error')
   .content
   .querySelector('.error');
 
-const hidePopup = (popup) => {
-  popup.remove();
-};
-
-const onPopupEscKeydown = (evt) => {
+const onPopupEscKeydown = (evt, popup) => {
   if (isEscapeKey(evt.key)) {
     evt.preventDefault();
-    hidePopup(evt);
+    hidePopup(popup);
   }
 };
+
+function hidePopup (popup) {
+  popup.remove();
+  document.removeEventListener('keydown', onPopupEscKeydown);
+}
 
 export const createPopup = (template) => {
   document.body.append(template);
 
   template.addEventListener('click', (evt) => hidePopup(evt.target));
-  document.addEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('keydown', (evt) => onPopupEscKeydown(evt, template));
 };

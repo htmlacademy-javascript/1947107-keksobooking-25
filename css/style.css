@@ -1057,3 +1057,7 @@ fieldset {
 .hidden {
   display: none;
 }
+
+.pristine-error {
+  color: red;
+}
