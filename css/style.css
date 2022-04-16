@@ -598,6 +598,9 @@ fieldset {
 }
 
 .ad-form__photo {
+  display: flex;
+  flex-wrap: wrap;
+
   margin-right: 10px;
   margin-bottom: 10px;
 
@@ -609,7 +612,8 @@ fieldset {
 }
 
 .ad-form__photo img {
-  max-width: 100%;
+  max-width: 50%;
+  object-fit: contain;
 }
 
 .ad-form__element--submit {

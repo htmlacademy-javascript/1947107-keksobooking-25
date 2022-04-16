@@ -10,6 +10,7 @@ export const CENTER = {
 };
 const ZOOM = 12;
 const AMOUNT_ADS = 10;
+const FAIL_MESSAGE = 'При загрузке данных произошла ошибка';
 
 const map = L.map('map-canvas');
 const layerGroup = L.layerGroup().addTo(map);
@@ -35,15 +36,11 @@ const mainMarker = L.marker(CENTER, {
   draggable: true
 });
 
-export const setMainMarker = (coords) => mainMarker.setLatLng([coords.lat, coords.lng]);
-
-const addMarkersToMap = (pin) => {
-  layerGroup
-    .addLayer(pin)
-    .addTo(map);
-};
+const setMainMarkerCoords = (coords) => mainMarker.setLatLng([coords.lat, coords.lng]);
 
 export const renderMarkers = (markers) => {
+  layerGroup.clearLayers();
+
   markers
     .slice(0, AMOUNT_ADS)
     .forEach((marker) => {
@@ -52,33 +49,26 @@ export const renderMarkers = (markers) => {
       });
       pin.bindPopup(createCard(marker));
 
-      addMarkersToMap(pin);
+      layerGroup
+        .addLayer(pin)
+        .addTo(map);
     });
 };
 
-export const clearMarkersOnMap = () => {
-  layerGroup.clearLayers();
-};
-
-export const updateLayerMap = (markers) => {
-  clearMarkersOnMap();
-  renderMarkers(markers);
-};
-
 export const resetMap = () => {
-  setMainMarker(CENTER);
-  updateLayerMap(getLocalData());
+  setMainMarkerCoords(CENTER);
+  renderMarkers(getLocalData());
 };
 
 const onSuccessRequest = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  updateLayerMap(ads);
+  renderMarkers(ads);
 };
 
 const onFailRequest = () => {
-  map._container.textContent = 'При загрузке данных произошла ошибка';
+  map._container.textContent = FAIL_MESSAGE;
 };
 
 map.on('load', () => {

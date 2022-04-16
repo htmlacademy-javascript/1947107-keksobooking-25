@@ -4,11 +4,10 @@ const fileChooserAvatar = document.querySelector('#avatar');
 const fileChooserImages = document.querySelector('#images');
 const avatarPreview = document.querySelector('.ad-form-header__preview img');
 const imagesPreview = document.querySelector('.ad-form__photo');
-const imagePreviewElement = document.createElement('img');
 
 const checkAvailableType = (file) => FILE_TYPES.some((it) => file.name.toLowerCase().endsWith(it));
 
-const onAvatarChange = (fileChooser) => {
+const setAvatarChange = (fileChooser) => {
   const file = fileChooser.files[0];
 
   if (checkAvailableType(file)) {
@@ -16,20 +15,22 @@ const onAvatarChange = (fileChooser) => {
   }
 };
 
-const onPhotosChange = (fileChooser) => {
-  imagesPreview.append(imagePreviewElement);
-  const img = imagesPreview.querySelector('img');
+const setPhotosChange = (fileChooser) => {
   const file = fileChooser.files[0];
 
-  if (checkAvailableType(file)) {
+  if (file && checkAvailableType(file)) {
+    const img = document.createElement('img');
     img.src = URL.createObjectURL(file);
+    imagesPreview.append(img);
   }
+
 };
 
 export const clearPreview = () => {
   avatarPreview.src = DEFAULT_AVATAR;
-  imagePreviewElement.remove();
+  imagesPreview.querySelectorAll('img')
+    .forEach((img) => img.remove());
 };
 
-fileChooserAvatar.addEventListener('change', (evt) => onAvatarChange(evt.target));
-fileChooserImages.addEventListener('change', (evt) => onPhotosChange(evt.target));
+fileChooserAvatar.addEventListener('change', (evt) => setAvatarChange(evt.target));
+fileChooserImages.addEventListener('change', (evt) => setPhotosChange(evt.target));

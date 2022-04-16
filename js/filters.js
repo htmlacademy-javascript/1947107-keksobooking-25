@@ -1,7 +1,12 @@
-import { updateLayerMap } from './map.js';
+import { renderMarkers } from './map.js';
 import { debounce } from './util.js';
 import { getLocalData } from './data.js';
 
+const PRICE_OPTIONS = {
+  MIDDLE: 'middle',
+  LOW: 'low',
+  HIGH: 'high'
+};
 const PRICE = {
   LOW: 10000,
   HIGH: 50000
@@ -25,11 +30,11 @@ const filterByPrice = (ad) => {
   const { value } = housingPriceElement;
 
   switch (value) {
-    case 'middle':
+    case PRICE_OPTIONS.MIDDLE:
       return ad.offer.price >= PRICE.LOW && ad.offer.price <= PRICE.HIGH;
-    case 'low':
+    case PRICE_OPTIONS.LOW:
       return ad.offer.price <= PRICE.LOW;
-    case 'high':
+    case PRICE_OPTIONS.HIGH:
       return ad.offer.price >= PRICE.HIGH;
     default:
       return true;
@@ -48,7 +53,7 @@ const filterByGuests = (ad) => {
   return value === DEFAULT_VALUE || ad.offer.rooms === +value;
 };
 
-const filterByFeutures = (ad) => {
+const filterByFeatures = (ad) => {
   const checkedFeatures = Array
     .from(document.querySelectorAll('.map__checkbox:checked'))
     .map((element) => element.value);
@@ -63,13 +68,13 @@ const getFilteredAds = (ads) =>  ads
     filterByPrice(ad) &&
     filterByRooms(ad) &&
     filterByGuests(ad) &&
-    filterByFeutures(ad));
+    filterByFeatures(ad));
 
 const onFiltersChange = debounce(
   () => {
     const filteredAds = getFilteredAds(getLocalData());
 
-    updateLayerMap(filteredAds);
+    renderMarkers(filteredAds);
   },
   FILTERS_DELAY
 );

@@ -1,6 +1,6 @@
 import { isEscapeKey } from './util.js';
 
-export const succeessTemplate = document.querySelector('#success')
+export const successTemplate = document.querySelector('#success')
   .content
   .querySelector('.success');
 export const errorTemplate = document.querySelector('#error')
