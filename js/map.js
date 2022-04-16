@@ -30,12 +30,14 @@ const markerIcon = L.icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
-export const mainMarker = L.marker(CENTER, {
+const mainMarker = L.marker(CENTER, {
   icon: mainMarkerIcon,
   draggable: true
 });
 
-const addMarkersOnMap = (pin) => {
+export const setMainMarker = (coords) => mainMarker.setLatLng([coords.lat, coords.lng]);
+
+const addMarkersToMap = (pin) => {
   layerGroup
     .addLayer(pin)
     .addTo(map);
@@ -50,7 +52,7 @@ export const renderMarkers = (markers) => {
       });
       pin.bindPopup(createCard(marker));
 
-      addMarkersOnMap(pin);
+      addMarkersToMap(pin);
     });
 };
 
@@ -58,16 +60,21 @@ export const clearMarkersOnMap = () => {
   layerGroup.clearLayers();
 };
 
-export const resetMap = (markers) => {
+export const updateLayerMap = (markers) => {
   clearMarkersOnMap();
   renderMarkers(markers);
+};
+
+export const resetMap = () => {
+  setMainMarker(CENTER);
+  updateLayerMap(getLocalData());
 };
 
 const onSuccessRequest = (ads) => {
   activateForm();
   setAddress(CENTER.lat, CENTER.lng);
   saveData(ads);
-  resetMap(getLocalData());
+  updateLayerMap(ads);
 };
 
 const onFailRequest = () => {

@@ -1,10 +1,13 @@
-import { resetMap } from './map.js';
+import { updateLayerMap } from './map.js';
 import { debounce } from './util.js';
 import { getLocalData } from './data.js';
 
-const LOW_PRICE = 10000;
-const HIGH_PRICE = 50000;
+const PRICE = {
+  LOW: 10000,
+  HIGH: 50000
+};
 const FILTERS_DELAY = 500;
+const DEFAULT_VALUE = 'any';
 
 const filtersElements = document.querySelector('.map__filters');
 const housingTypeElement = document.querySelector('#housing-type');
@@ -15,37 +18,37 @@ const housingGuestsElement = document.querySelector('#housing-guests');
 const filterByType = (ad) => {
   const { value } = housingTypeElement;
 
-  return value === 'any' || ad.offer.type === value;
+  return value === DEFAULT_VALUE || ad.offer.type === value;
 };
 
 const filterByPrice = (ad) => {
   const { value } = housingPriceElement;
 
   switch (value) {
-    case 'any':
-      return true;
     case 'middle':
-      return ad.offer.price >= LOW_PRICE && ad.offer.price <= HIGH_PRICE;
+      return ad.offer.price >= PRICE.LOW && ad.offer.price <= PRICE.HIGH;
     case 'low':
-      return ad.offer.price <= LOW_PRICE;
+      return ad.offer.price <= PRICE.LOW;
     case 'high':
-      return ad.offer.price >= HIGH_PRICE;
+      return ad.offer.price >= PRICE.HIGH;
+    default:
+      return true;
   }
 };
 
 const filterByRooms = (ad) => {
   const { value } = housingRoomsElement;
 
-  return value === 'any' || ad.offer.rooms === +value;
+  return value === DEFAULT_VALUE || ad.offer.rooms === +value;
 };
 
 const filterByGuests = (ad) => {
   const { value } = housingGuestsElement;
 
-  return value === 'any' || ad.offer.rooms === +value;
+  return value === DEFAULT_VALUE || ad.offer.rooms === +value;
 };
 
-const filterByFuetures = (ad) => {
+const filterByFeutures = (ad) => {
   const checkedFeatures = Array
     .from(document.querySelectorAll('.map__checkbox:checked'))
     .map((element) => element.value);
@@ -56,15 +59,19 @@ const filterByFuetures = (ad) => {
 };
 
 const getFilteredAds = (ads) =>  ads
-  .filter((ad) => filterByType(ad) && filterByPrice(ad) && filterByRooms(ad) && filterByGuests(ad) && filterByFuetures(ad));
+  .filter((ad) => filterByType(ad) &&
+    filterByPrice(ad) &&
+    filterByRooms(ad) &&
+    filterByGuests(ad) &&
+    filterByFeutures(ad));
 
-const changeFilters = debounce(
+const onFiltersChange = debounce(
   () => {
     const filteredAds = getFilteredAds(getLocalData());
 
-    resetMap(filteredAds);
+    updateLayerMap(filteredAds);
   },
   FILTERS_DELAY
 );
 
-filtersElements.addEventListener('change', changeFilters);
+filtersElements.addEventListener('change', onFiltersChange);
