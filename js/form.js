@@ -23,8 +23,8 @@ const RoomCapacity = {
   100: ['0']
 };
 
-const formAd = document.querySelector('.ad-form');
-const formFilter = document.querySelector('.map__filters');
+const formAdElement = document.querySelector('.ad-form');
+const formFilterElement = document.querySelector('.map__filters');
 const capacityElement = document.querySelector('#capacity');
 const roomNumberElement = document.querySelector('#room_number');
 const priceElement = document.querySelector('#price');
@@ -32,9 +32,9 @@ const typeElement = document.querySelector('#type');
 const addressElement = document.querySelector('#address');
 const timeinElement = document.querySelector('#timein');
 const timeoutElement = document.querySelector('#timeout');
-const slider = document.querySelector('.ad-form__slider');
-const sendButton = document.querySelector('.ad-form__submit');
-const resetButton = document.querySelector('.ad-form__reset');
+const sliderElement = document.querySelector('.ad-form__slider');
+const sendButtonElement = document.querySelector('.ad-form__submit');
+const resetButtonElement = document.querySelector('.ad-form__reset');
 
 const pristineConfig = {
   classTo: 'ad-form__element',
@@ -58,13 +58,13 @@ const sliderConfig = {
   }
 };
 
-noUiSlider.create(slider, sliderConfig);
+noUiSlider.create(sliderElement, sliderConfig);
 
 const setPricePlaceholder = (type) => {
   priceElement.placeholder = MinRoomPrice[type];
 };
 
-const setSliderValue = (val) => slider.noUiSlider.set(val);
+const setSliderValue = (val) => sliderElement.noUiSlider.set(val);
 
 priceElement.addEventListener('change', ({ target }) => {
   setSliderValue(target.value);
@@ -76,7 +76,7 @@ timeoutElement.addEventListener('change', ({ target }) => {
   timeinElement.value = target.value;
 });
 
-const pristine = new Pristine(formAd, pristineConfig);
+const pristine = new Pristine(formAdElement, pristineConfig);
 
 const validateCapacity = (value) => RoomCapacity[roomNumberElement.value].includes(value);
 const validatePrice = (value) => MinRoomPrice[typeElement.value] <= +value;
@@ -85,15 +85,15 @@ pristine.addValidator(capacityElement, validateCapacity, ERROR_MESSAGES.CAPACITY
 pristine.addValidator(priceElement, validatePrice, ERROR_MESSAGES.PRICE);
 
 const deactivateForms = () => {
-  formAd.classList.add('ad-form--disabled');
-  formFilter.classList.add('ad-form--disabled');
+  formAdElement.classList.add('ad-form--disabled');
+  formFilterElement.classList.add('ad-form--disabled');
 };
 
 deactivateForms();
 
 export const activateForms = () => {
-  formAd.classList.remove('ad-form--disabled');
-  formFilter.classList.remove('ad-form--disabled');
+  formAdElement.classList.remove('ad-form--disabled');
+  formFilterElement.classList.remove('ad-form--disabled');
 };
 
 export const setAddress = (lat, lng) => {
@@ -113,8 +113,8 @@ const resetPrice = () => {
 };
 
 const resetForm = () => {
-  formAd.reset();
-  formFilter.reset();
+  formAdElement.reset();
+  formFilterElement.reset();
   resetMap();
   clearPreview();
   removeErrors();
@@ -122,12 +122,12 @@ const resetForm = () => {
   setAddress(CENTER.lat, CENTER.lng);
 };
 
-resetButton.addEventListener('click', (evt) => {
+resetButtonElement.addEventListener('click', (evt) => {
   evt.preventDefault();
   resetForm();
 });
 
-const toggleSendButtonState = () => sendButton.classList.toggle('ad-form--disabled');
+const toggleSendButtonState = () => sendButtonElement.classList.toggle('ad-form--disabled');
 
 const onSuccess = () => {
   resetForm();
@@ -140,7 +140,7 @@ const onFail = () => {
   createPopup(errorTemplate);
 };
 
-formAd.addEventListener('submit', (evt) => {
+formAdElement.addEventListener('submit', (evt) => {
   evt.preventDefault();
   const isValid = pristine.validate();
   const formData = new FormData(evt.target);
@@ -157,7 +157,7 @@ formAd.addEventListener('submit', (evt) => {
 
 typeElement.addEventListener('change', (evt) => setPricePlaceholder(evt.target.value));
 roomNumberElement.addEventListener('change', () => pristine.validate());
-slider.noUiSlider.on('change', (val) => {
+sliderElement.noUiSlider.on('change', (val) => {
   priceElement.value = val[0];
   pristine.validate();
 });
